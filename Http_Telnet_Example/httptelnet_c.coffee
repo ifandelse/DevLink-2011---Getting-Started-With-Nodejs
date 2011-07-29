@@ -7,10 +7,11 @@ webSrv = require('http').createServer (request, response) ->
     response.writeHead 200, {'Content-Type': 'text/html'}
     response.write "<h3>You requested " + request.url + "</h3>"
     response.end()
-webSrv.listen 8080
 
 webSrv.on 'request', (request, response) ->
         notify(client, request) for client in sockets
+
+webSrv.listen 8080
 
 netSrv = require('net').Server (socket) ->
     sockets.push socket

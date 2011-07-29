@@ -9,8 +9,6 @@ var webSrv = http.createServer(function(request, response){
     response.end();
 });
 
-webSrv.listen(8080);
-
 webSrv.on('request', function(request, response){
     var idx = 0,
         length = sockets.length;
@@ -18,6 +16,8 @@ webSrv.on('request', function(request, response){
         sockets[idx].write(request.method + "\t" + request.url + "\r\n");
     }
 });
+
+webSrv.listen(8080);
 
 var server = net.Server(function (socket) {
     sockets.push(socket);
