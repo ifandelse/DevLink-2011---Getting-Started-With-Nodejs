@@ -1,21 +1,35 @@
-/*function loadDir(directory, callback) {
-    fs.readdir(directory, function onReaddir(err, files) {
-        if (err) return callback(err);
-        var count, results = {};
-        files = files.filter(function (filename) {
-            return filename[0] !== '.';
-        });
-        count = files.length;
-        files.forEach(function (filename) {
-            var path = directory + "/" + filename;
-            fs.readFile(path, function onRead(err, data) {
-                if (err) return callback(err);
-                results[filename] = data;
-                if (--count === 0) callback(null, results);
-            });
-        });
-        if (count === 0) callback(null, results);
-    });
-}*/
+var lazy = require("lazy"),
+    fs  = require("fs"),
+    dir = "Files",
+    destFile = "./Files/Output/output.txt",
+    outfile = fs.createWriteStream(destFile, {'flags' : 'a'});
 
-var fs = require('fs');
+try{
+    fs.unlinkSync(destFile);
+}
+catch(exception) {
+    console.log("File didn't previously exist.");
+}
+
+
+var fileProcessor = function(filepath) {
+    new lazy(fs.createReadStream(filepath))
+        .lines
+        .forEach(function(line){
+            outfile.write(filepath + "\t" + line + "\r\n");
+        });
+};
+
+// combiner....
+fs.readdir(dir, function(err, files){
+    files.filter(function(f) {
+                    return f[0] !== ".";
+                 })
+         .forEach(function(file) {
+                    fs.stat(dir + "/" + file, function(err, st) {
+                        if(st.isFile()) {
+                            fileProcessor(dir + "/" + file);
+                        }
+                    });
+                  });
+});
