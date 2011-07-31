@@ -11,7 +11,6 @@ catch(exception) {
     console.log("File didn't previously exist.");
 }
 
-
 var fileProcessor = function(filepath) {
     new lazy(fs.createReadStream(filepath))
         .lines
