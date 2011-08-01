@@ -1,5 +1,7 @@
 body {
     font-family: Tahoma, Arial;
+    font-size: 9pt;
+    background-color: black;
 }
 
 fieldset {
@@ -7,13 +9,40 @@ fieldset {
     border-radius:15px;
     height: 600px;
     margin-left: 10px;
+    background-color: #f5f5f5;
+    margin-top: 30px;
 }
 
-.container {
-    float:left;
+.title {
+    font-size: 12pt;
+    font-family: Arial;
+    font-variant: small-caps;
+    color: white;
+    background-color: #708090;
+    border: 1pt solid #2f4f4f;
+    border-radius:15px;
+    padding:  7px;
+}
+
+.search-button {
+    height: 23px;
+    margin: auto;
+    vertical-align: middle;
+}
+
+search-text {
+    height: 23px;
+    width: 55px;
+    margin-top: auto;
+    margin-bottom: auto;
+    vertical-align: middle;
 }
 
 .outer-container {
+    float:left;
+}
+
+.container {
     float:left;
 }
 
@@ -26,9 +55,21 @@ fieldset {
 .scrollableDiv {
     overflow-y: auto;
     overflow-x: hidden;
-    height: 580px;
-    min-width: 275px;
-    padding-right:30px;
+    height: 570px;
+    min-width: 295px;
+    padding-right:1px;
+}
+
+table {
+    width: 100%;
+}
+
+.hashTagTable {
+    padding-right:10px;
+}
+
+tr {
+    height: 52px;
 }
 
 .label {
@@ -38,12 +79,45 @@ fieldset {
 
 .count {
     text-align: right;
+    padding-right: 5px;
 }
 
 .spacedRow {
     padding-bottom: 15px;
 }
 
-.title {
+.alt-row {
+    background-color: #dcdcdc;
+    border-bottom: 1pt solid silver;
+    border-top: 1pt solid silver;
+}
+
+.hashtag {
+    padding-left: 5px;
+    font-variant: small-caps;
+    font-size: 12pt;
+}
+
+.page-title {
+    padding-left: 10px;
+    font-variant: small-caps;
     font-size: 14pt;
+    background-color: silver;
+    border-bottom:  1pt solid #696969;
+    border-top:  1pt solid #696969;
+    height: 25px;
+    width: 100%;
+    vertical-align: middle;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+}
+
+.searchInfo {
+    float:left;
+}
+
+.searchUpdate {
+    float:right;
+    margin-right: 15px;
 }

@@ -5,29 +5,16 @@ var StatsCollector = function(notifier) {
             while(text.search(regExp) !== -1) {
                 match = regExp.exec(text);
                 if(match && match[1]) {
-                    callback(match[1]);
+                    callback(match[1].toLowerCase());
                 }
                 text = text.replace(regExp, "");
             }
         };
     
-    this.tweeters = {
-        list: [],
-        registry: {}
-    };
-    this.mentions = {
-        list: [],
-        registry: {}
-    };
-    this.mentioners = {
-        list: [],
-        registry: {}
-    };
-    this.hashTags = {
-        list: [],
-        registry: {}
-    };
-    this.lastIdx = 0;
+    this.tweeters   = { list: [], registry: {} };
+    this.mentions   = { list: [], registry: {} };
+    this.mentioners = { list: [], registry: {} };
+    this.hashTags   = { list: [], registry: {} };
 
     this.processTweet = function(tweets) {
         tweets.forEach(function(tweet){
@@ -87,6 +74,12 @@ var StatsCollector = function(notifier) {
     };
 
     _notifier.addListener("newTweets", this.processTweet.bind(this));
+    _notifier.addListener("init", function(data) {
+        this.tweeters   = { list: [], registry: {} };
+        this.mentions   = { list: [], registry: {} };
+        this.mentioners = { list: [], registry: {} };
+        this.hashTags   = { list: [], registry: {} };
+    }.bind(this));
 };
 
 exports.StatsCollector = StatsCollector;

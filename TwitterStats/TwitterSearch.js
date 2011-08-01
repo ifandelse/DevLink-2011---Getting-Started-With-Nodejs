@@ -3,10 +3,10 @@ var query = require('querystring'),
 
 var client = http.createClient(80, "search.twitter.com");
 
-var TwitterSearch = function(notifier, refreshInterval, searchVal) {
+var TwitterSearch = function(notifier, refreshInterval) {
     var _searchPath = "/search.json",
-        _searchVal = searchVal || "nodejs",
-        _notifier = notifier;
+        _notifier = notifier,
+        _timeoutFn;
 
     this.refreshInterval = refreshInterval || 5000;
 
@@ -28,11 +28,7 @@ var TwitterSearch = function(notifier, refreshInterval, searchVal) {
         return _searchPath + srchQry;
     };
 
-    this.defaultSearch = {
-        q: _searchVal,
-        result_type: "recent",
-        rpp: 100
-    };
+    this.defaultSearch = {};
 
     this.nextSearch = undefined;
 
@@ -54,7 +50,7 @@ var TwitterSearch = function(notifier, refreshInterval, searchVal) {
             });
             request.end();
         }
-        setTimeout(this.runSearch.bind(this), this.refreshInterval);
+        _timeoutFn = setTimeout(this.runSearch.bind(this), this.refreshInterval);
     };
 
     this.onSearched = function(payload) {
@@ -87,11 +83,21 @@ var TwitterSearch = function(notifier, refreshInterval, searchVal) {
         _notifier.emit("newTweets", newTweets);
     };
 
-    this.start = function() {
-        this.runSearch();
-    };
-
     _notifier.addListener("searched", this.onSearched.bind(this));
+
+    _notifier.addListener("init", function(data) {
+        console.log("TwitterSearch got an init: " + data.searchTerm);
+        clearTimeout(_timeoutFn);
+        this.defaultSearch = {
+            q: data.searchTerm, 
+            result_type: "recent",
+            rpp: 100
+        };
+        this.nextSearch = undefined;
+        this.searchRegistry = {};
+        this.tweetRegistry = {};
+        this.runSearch();
+    }.bind(this));
 };
 
 exports.TwitterSearch = TwitterSearch;
