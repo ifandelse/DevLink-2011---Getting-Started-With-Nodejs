@@ -1,0 +1,14 @@
+<fieldset>
+    <legend><div class="title">Most Selfless:</div></legend>
+    <div class="scrollableDiv">
+        <table>
+            {{each rMentioners}}
+            <tr>
+                <td><img class="images" data-bind="attr: { 'src': image }" /></td>
+                <td><span class="label" data-bind="text: user" /></td>
+                <td><span class="count" data-bind="text: count" /></td>
+            </tr>
+            {{/each}}
+        </table>
+    </div>
+</fieldset>

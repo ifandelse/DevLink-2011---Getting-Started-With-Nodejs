@@ -1,0 +1,49 @@
+body {
+    font-family: Tahoma, Arial;
+}
+
+fieldset {
+    border: 1pt solid black;
+    border-radius:15px;
+    height: 600px;
+    margin-left: 10px;
+}
+
+.container {
+    float:left;
+}
+
+.outer-container {
+    float:left;
+}
+
+.images {
+    height: 48px;
+    width: 48px;
+    border: .5pt solid black;
+}
+
+.scrollableDiv {
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 580px;
+    min-width: 275px;
+    padding-right:30px;
+}
+
+.label {
+    text-align: left;
+    word-wrap: break-word;
+}
+
+.count {
+    text-align: right;
+}
+
+.spacedRow {
+    padding-bottom: 15px;
+}
+
+.title {
+    font-size: 14pt;
+}

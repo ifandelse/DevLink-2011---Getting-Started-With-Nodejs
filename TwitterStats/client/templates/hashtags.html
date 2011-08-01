@@ -1,0 +1,13 @@
+<fieldset>
+    <legend><div class="title">Other Hash Tags:</div></legend>
+    <div class="scrollableDiv">
+        <table width="90%">
+            {{each rHashTags}}
+            <tr>
+                <td class="spacedRow label"><span class="label" data-bind="text: hashTag" /></td>
+                <td class="spacedRow count"><span class="count" data-bind="text: count" /></td>
+            </tr>
+            {{/each}}
+        </table>
+    </div>
+</fieldset>
