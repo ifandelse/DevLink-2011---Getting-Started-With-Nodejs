@@ -2,11 +2,17 @@
     <legend><div class="title">Top Mentioned:</div></legend>
     <div class="scrollableDiv">
         <table cellspacing="0">
-            {{each(i,mention) rMentions}}
+            {{each(i,mention) mentions}}
             <tr>
-                <td data-bind="css: { 'alt-row': i % 2 === 0 }"><img class="images" data-bind="attr: { 'src': image }" /></td>
-                <td data-bind="css: { 'alt-row': i % 2 === 0 }"><span class="label" data-bind="text: user" /></td>
-                <td data-bind="css: { 'alt-row': i % 2 === 0 }"><span class="count" data-bind="text: count" /></td>
+                {{if i % 2 === 0}}
+                    <td class="alt-row"><img class="images" src="${image}" /></td>
+                    <td class="alt-row"><span class="label">${user}</span></td>
+                    <td class="alt-row"><span class="count">${count}</span></td>
+                {{else}}
+                    <td class=""><img class="images" src="${image}" /></td>
+                    <td class=""><span class="label">${user}</span></td>
+                    <td class=""><span class="count">${count}</span></td>
+                {{/if}}
             </tr>
             {{/each}}
         </table>

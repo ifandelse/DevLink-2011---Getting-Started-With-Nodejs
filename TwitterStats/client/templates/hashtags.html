@@ -2,10 +2,15 @@
     <legend><div class="title">Other Hash Tags:</div></legend>
     <div class="scrollableDiv">
         <table class="hashTagTable" cellspacing="0">
-            {{each(i,tag) rHashTags}}
+            {{each(i,tag) hashTags}}
             <tr>
-                <td class="hashtag" data-bind="css: { 'alt-row': i % 2 === 0 }" class="spacedRow label"><span class="label" data-bind="text: hashTag" /></td>
-                <td data-bind="css: { 'alt-row': i % 2 === 0 }" class="spacedRow count"><span class="count" data-bind="text: count" /></td>
+                {{if i % 2 === 0}}
+                    <td class="hashtag alt-row spacedRow label"><span class="label">${hashTag}</span></td>
+                    <td class="spacedRow count alt-row"><span class="count">${count}</span></td>
+                {{else}}
+                    <td class="hashtag spacedRow label"><span class="label">${hashTag}</span></td>
+                    <td class="spacedRow count"><span class="count">${count}</span></td>
+                {{/if}}
             </tr>
             {{/each}}
         </table>

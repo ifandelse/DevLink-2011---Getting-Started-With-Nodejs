@@ -4,7 +4,11 @@ var events = require("events"),
     app = express.createServer(),
     io = require('socket.io').listen(app),
     TwitterSearch = require ('./TwitterSearch.js').TwitterSearch,
-    StatsCollector = require('./StatsCollector.js').StatsCollector;
+    TweetCount = require('./collectors/TweetCount.js').TweetCount,
+    MentionCount = require('./collectors/MentionCount.js').MentionCount,
+    MentionerCount = require('./collectors/MentionerCount.js').MentionerCount,
+    HashTagCount = require('./collectors/HashTagCount.js').HashTagCount,
+    ProfanityPercentage = require('./collectors/ProfanityPercentage.js').ProfanityPercentage;
 
 
 io.set('log level', 1);
@@ -16,21 +20,22 @@ var TwitterStatsApp = function(port, refreshInterval, notifier, searchTerm) {
 
     this.sockets = [];
 
-    this.latestStats = {};
+    this.statCollectors = [];
 
     this.wireUpSocket = function(socket) {
         this.sockets.push(socket);
-        console.log("Sending Init for first time connect");
         socket.emit("init", { searchTerm: _searchTerm });
-        if(this.latestStats) {
-            socket.emit("stats", this.latestStats); // on connect, push info to the client
-        }
+        // on connect, push info to the client
+        this.statCollectors.forEach(function(s) {
+            if(s.lastStats !== undefined) {
+                socket.emit("stats", s.lastStats);
+            }
+        });
         socket.on('end', function (socket) {
             this.sockets = sockets.filter(function(s) { return s !== socket; });
         });
         socket.on('newSearch', function(data) {
             if(data.origin === "localhost") {
-                console.log("NEW SEARCH from web socket client.");
                 notifier.emit("newSearch", data);
             }
         });
@@ -44,13 +49,11 @@ var TwitterStatsApp = function(port, refreshInterval, notifier, searchTerm) {
         }, this);
     }.bind(this));
     notifier.addListener("newSearch", function(data) {
-        console.log("New Search being handled by app: " + data.searchTerm);
+        console.log("New Search: " + data.searchTerm);
         _searchTerm = data.searchTerm;
-        this.latestStats = {};
         notifier.emit("init", { searchTerm: _searchTerm });
     }.bind(this));
     notifier.addListener("init", function(data) {
-        console.log("Sending Init to " + this.sockets.length + " client(s) per notifier activity");
         this.sockets.forEach(function(s) {
             s.emit("init", data);
         }, this);
@@ -58,8 +61,12 @@ var TwitterStatsApp = function(port, refreshInterval, notifier, searchTerm) {
 
     // Setup code exec'd as object spins up
     _search = new TwitterSearch(notifier, refreshInterval, searchTerm);
-    _stats = new StatsCollector(notifier);
-    
+    this.statCollectors.push(new TweetCount(notifier));
+    this.statCollectors.push(new MentionCount(notifier));
+    this.statCollectors.push(new MentionerCount(notifier));
+    this.statCollectors.push(new HashTagCount(notifier));
+    this.statCollectors.push(new ProfanityPercentage(notifier));
+
     app.use("/", express.static(__dirname + '/client'));
     app.listen(port);
     io.sockets.on('connection', this.wireUpSocket.bind(this));

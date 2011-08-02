@@ -50,6 +50,9 @@ var TwitterSearch = function(notifier, refreshInterval) {
             });
             request.end();
         }
+        else {
+            console.log("We have already searched " + url);
+        }
         _timeoutFn = setTimeout(this.runSearch.bind(this), this.refreshInterval);
     };
 
@@ -78,6 +81,11 @@ var TwitterSearch = function(notifier, refreshInterval) {
         newTweets.forEach(function(tweet) {
             if(!this.tweetRegistry[tweet.id]) {
                 this.tweetRegistry[tweet.id] = true;
+            }
+            // deal with the images that consistently fail from twitter...
+            if(tweet.profile_image_url === "http://twitter.com/images/default_profile_normal.png" ||
+               tweet.profile_image_url === "http://static.twitter.com/images/default_profile_normal.png") {
+                tweet.profile_image_url = "templates/images/default_profile_1_normal.png";
             }
         }, this);
         _notifier.emit("newTweets", newTweets);

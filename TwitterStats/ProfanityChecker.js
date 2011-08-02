@@ -21,4 +21,4 @@ var profanityChecker = {
     }
 };
 
-exports.profanityCheck = profanityChecker.hasProfanity;
+exports.profanityaCheck = profanityChecker.hasProfanity;

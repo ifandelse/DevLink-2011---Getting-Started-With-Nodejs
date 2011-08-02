@@ -6,26 +6,23 @@
     <link rel="stylesheet" type="text/css" href="style.css">
     <script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
     <script type="text/javascript" src="js/jquery.tmpl.js"></script>
-    <script type="text/javascript" src="js/knockout-latest.js"></script>
-    <script type="text/javascript" src="js/koExternalTemplateEngine.debug.js"></script>
+    <script type="text/javascript" src="js/externalTemplates.js"></script>
     <script type="text/javascript" src="js/main.js"></script>
     <script src="/socket.io/socket.io.js"></script>
-
-
 </head>
 <body>
     <div class="page-title">
-        <div class="searchInfo">Searching Twitter for: <span data-bind="text: searchTerm" /></div>
-        <div class="searchUpdate" data-bind="visible: showSearch">
-            <input type="text" data-bind="value: newSearchTerm">
-            <input type="button" value="Search" data-bind="click: updateSearch">
+        <div class="searchInfo">Searching Twitter for: <span id="searchTerm"></span></div>
+        <div class="searchUpdate" id="searchPanel">
+            <input type="text" id="newSearchTerm">
+            <input type="button" value="Search" onclick="statsClient.updateSearch()">
         </div>
     </div>
     <div class="outer-container">
-        <div class="container tweeters" data-bind="template: { name: 'tweeters' }" ></div>
-        <div class="container mentions" data-bind="template: { name: 'mentions' }" ></div>
-        <div class="container mentioners" data-bind="template: { name: 'mentioners' }" ></div>
-        <div class="container hashtags" data-bind="template: { name: 'hashtags' }" ></div>
+        <div id="tweetersContainer" class="container tweeters"></div>
+        <div id="mentionsContainer" class="container mentions"></div>
+        <div id="mentionersContainer" class="container mentioners"></div>
+        <div id="hashtagsContainer" class="container hashtags"></div>
     </div>
 </body>
 </html>
