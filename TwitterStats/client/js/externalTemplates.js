@@ -30,8 +30,8 @@ var TemplateFinder = function () {
                                 "timeout": 0,
                                 "success": function(response) { templateHtml = response;},
                                 "error": function(exception) {
-                                    alert("Problem getting template " + templateId);
-                                }.bind(this)
+                                    alert("Problem getting template " + templateId + "\r\n" + exception);
+                                }
                           };
 
             $.extend(true, options, this['ajaxOptions']);

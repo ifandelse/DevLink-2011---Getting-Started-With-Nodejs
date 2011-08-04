@@ -8,19 +8,20 @@ var events = require("events"),
     MentionCount = require('./collectors/MentionCount.js').MentionCount,
     MentionerCount = require('./collectors/MentionerCount.js').MentionerCount,
     HashTagCount = require('./collectors/HashTagCount.js').HashTagCount,
-    ProfanityPercentage = require('./collectors/ProfanityPercentage.js').ProfanityPercentage;
+    ProfanityPercentage = require('./collectors/ProfanityPercentage.js').ProfanityPercentage,
+    v8 = require('v8-profiler');
 
 
 io.set('log level', 1);
 
-var TwitterStatsApp = function(port, refreshInterval, notifier, searchTerm) {
+var TwitterStatsApp = function(port, refreshInterval, notifier, searchTerm, collectors) {
     var _search,
         _stats,
         _searchTerm = searchTerm;
 
     this.sockets = [];
 
-    this.statCollectors = [];
+    this.statCollectors = collectors || [];
 
     this.wireUpSocket = function(socket) {
         this.sockets.push(socket);
@@ -32,7 +33,7 @@ var TwitterStatsApp = function(port, refreshInterval, notifier, searchTerm) {
             }
         });
         socket.on('end', function (socket) {
-            this.sockets = sockets.filter(function(s) { return s !== socket; });
+            this.sockets = this.sockets.filter(function(s) { return s !== socket; });
         });
         socket.on('newSearch', function(data) {
             if(data.origin === "localhost") {
@@ -56,16 +57,11 @@ var TwitterStatsApp = function(port, refreshInterval, notifier, searchTerm) {
     notifier.addListener("init", function(data) {
         this.sockets.forEach(function(s) {
             s.emit("init", data);
-        }, this);
+        });
     }.bind(this));
 
     // Setup code exec'd as object spins up
     _search = new TwitterSearch(notifier, refreshInterval, searchTerm);
-    this.statCollectors.push(new TweetCount(notifier));
-    this.statCollectors.push(new MentionCount(notifier));
-    this.statCollectors.push(new MentionerCount(notifier));
-    this.statCollectors.push(new HashTagCount(notifier));
-    this.statCollectors.push(new ProfanityPercentage(notifier));
 
     app.use("/", express.static(__dirname + '/client'));
     app.listen(port);
@@ -73,4 +69,10 @@ var TwitterStatsApp = function(port, refreshInterval, notifier, searchTerm) {
     notifier.emit('init', { searchTerm: _searchTerm });
 };
 
-var twitterApp = new TwitterStatsApp(8001, 3000, notifier, "nodejs");
+var statCollectors = [new TweetCount(notifier),
+                      new MentionCount(notifier),
+                      new MentionerCount(notifier),
+                      new HashTagCount(notifier),
+                      new ProfanityPercentage(notifier)];
+
+var twitterApp = new TwitterStatsApp(8001, 3000, notifier, "nodejs", statCollectors);

@@ -33,6 +33,8 @@ var ProfanityPercentage = function(notifier) {
         /\bfag\b/i,
         /\bbitch\b/i,
         /\bfaggot\b/,
+        /\bpiss\b/,
+        /\bpissing\b/
     ];
 
     this.hasProfanity= function(text) {
@@ -55,7 +57,7 @@ var ProfanityPercentage = function(notifier) {
             return 0;
         }
         else {
-            return (this.profanityStats.explicit / total) * 100;
+            return ((this.profanityStats.explicit / total) * 100).toFixed(2);
         }
     };
 

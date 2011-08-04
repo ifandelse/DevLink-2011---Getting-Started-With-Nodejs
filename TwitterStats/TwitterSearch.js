@@ -5,7 +5,6 @@ var client = http.createClient(80, "search.twitter.com");
 
 var TwitterSearch = function(notifier, refreshInterval) {
     var _searchPath = "/search.json",
-        _notifier = notifier,
         _timeoutFn;
 
     this.refreshInterval = refreshInterval || 5000;
@@ -47,13 +46,14 @@ var TwitterSearch = function(notifier, refreshInterval) {
                 response.addListener("end", function() {
                     notifier.emit("searched", JSON.parse(body));
                 });
-            });
+                _timeoutFn = setTimeout(this.runSearch.bind(this), this.refreshInterval);
+            }.bind(this));
             request.end();
         }
         else {
             console.log("We have already searched " + url);
+            _timeoutFn = setTimeout(this.runSearch.bind(this), this.refreshInterval);
         }
-        _timeoutFn = setTimeout(this.runSearch.bind(this), this.refreshInterval);
     };
 
     this.onSearched = function(payload) {
@@ -88,12 +88,12 @@ var TwitterSearch = function(notifier, refreshInterval) {
                 tweet.profile_image_url = "templates/images/default_profile_1_normal.png";
             }
         }, this);
-        _notifier.emit("newTweets", newTweets);
+        notifier.emit("newTweets", newTweets);
     };
 
-    _notifier.addListener("searched", this.onSearched.bind(this));
+    notifier.addListener("searched", this.onSearched.bind(this));
 
-    _notifier.addListener("init", function(data) {
+    notifier.addListener("init", function(data) {
         console.log("TwitterSearch got an init: " + data.searchTerm);
         clearTimeout(_timeoutFn);
         this.defaultSearch = {

@@ -1,0 +1,121 @@
+body {
+    font-family: Verdana, Tahoma, Arial;
+    font-size: 9pt;
+    background-color: #191970;
+    padding: 0px;
+    margin: 0px;
+}
+
+li {
+    list-style-type: none;
+    display: table-row;
+}
+
+.outer-wrap {
+    width: 670px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #b0c4de;
+    padding-top:10px;
+    padding-bottom: 10px;
+    height: 100%;
+    top: 0px;
+    border: 1pt solid black;
+}
+
+.outer-container {
+    width:650px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #f0f8ff;
+    border: 1pt solid #191970;
+}
+
+.thumbnail-image {
+    float: left;
+    height: 48px;
+    overflow: hidden;
+    width: 48px;
+    margin-top: 3px;
+    border: 1pt solid black;
+}
+
+.tweet-container {
+    display: block;
+    max-height: 800px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.tweet {
+    padding: 10px 20px;
+    font-size: 15px;
+    position: relative;
+    zoom: 1;
+}
+
+.tweet-dogear {
+    background: url(./img/tweet-dogear.png) no-repeat 24px 25px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 24px;
+    height: 25px;
+}
+
+.tweet-content {
+    margin-left: 58px;
+    min-height: 48px;
+}
+
+.tweet-row {
+    display: block;
+    position: relative;
+    line-height: 15px;
+}
+
+.tweet-screen-name {
+    font-weight: bold;
+    color: #333!important;
+    margin-bottom: 5px;
+}
+
+.tweet-full-name {
+    color: #999;
+    font-size: 12px;
+}
+
+.tweet-timestamp {
+    color: #999!important;
+    font-size: 11px;
+    margin-top: 7px;
+}
+
+.tweet-text {
+    padding: 0;
+    font-family: Arial,"Helvetica Neue",sans-serif;
+    line-height: 19px;
+    word-wrap: break-word;
+}
+
+#doc ::-webkit-scrollbar-track-piece {
+    background-color: #FAFAFA;
+    -webkit-border-radius: 0;
+    -webkit-border-bottom-right-radius: 8px;
+    -webkit-border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px 8px;
+    border-bottom-left-radius: 8px 8px;
+}
+
+#doc ::-webkit-scrollbar {
+    width: 9px;
+    height: 9px;
+}
+
+.totals {
+    margin-left: 20px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    font-size: 14pt;
+    color: #191970;
+}

@@ -9,6 +9,7 @@ var socket,
             var newSearchTerm = $("#newSearchTerm").val();
             if(newSearchTerm) {
                 this.searchTerm = ""; // will prevent further processing of stats from old search
+                this.clear();
                 socket.emit("newSearch", { searchTerm: newSearchTerm, origin: document.domain });
             }
         },
@@ -17,8 +18,14 @@ var socket,
             if(typeof $.template(templateName) !== 'function') {
                 $.template( templateName, templateFinder.getTemplateNode(templateName));
             }
-            $(targetElemSelector).empty();
-            $.tmpl(templateName, data).appendTo(targetElemSelector);
+            var div = $("<div />");
+            $.tmpl(templateName, data).appendTo(div);
+            if($(targetElemSelector).children().length === 0) {
+                div.children().appendTo($(targetElemSelector));
+            }
+            else {
+                div.children().replaceAll($(targetElemSelector).children());
+            }
         },
 
         userSort: function(left, right) {
@@ -68,16 +75,32 @@ var socket,
         },
 
         ProfanityPercentage: function(stats) {
-            console.log("Percentage: " + stats.percentage + ", clean: " + stats.clean + ", explicit: " + stats.explicit);
+            stats.total = stats.clean + stats.explicit;
+            stats.percentage = stats.percentage;
+            this.populate(stats, "profperc", "#profPercContainer");
+            if(stats.percentage < 30) {
+                $("#profPercentage").css("color", "#006400");
+            }
+            else if (stats.percentage < 60) {
+                $("#profPercentage").css("color", "#ff8c00");
+            }
+            else {
+                $("#profPercentage").css("color", "#ff0000");
+            }
         },
 
         init: function(data) {
             this.searchTerm = data.searchTerm;
             $("#searchTerm").html(data.searchTerm);
+            this.clear();
+        },
+
+        clear: function() {
             $("#tweetersContainer").empty();
             $("#mentionersContainer").empty();
             $("#mentionsContainer").empty();
             $("#hashtagsContainer").empty();
+            $("#profPercContainer").empty();
         }
     };
 

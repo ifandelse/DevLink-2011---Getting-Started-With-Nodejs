@@ -1,0 +1,41 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>Twitter Streaming Demo</title>
+    <link rel="stylesheet" href="style.css" type="text/css">
+    <script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
+    <script type="text/javascript" src="js/jquery.tmpl.js"></script>
+    <script type="text/javascript" src="js/knockout-latest.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
+    <script type="text/html" id="tweet">
+        <div class="tweet">
+            <div class="tweet-dogear "></div>
+            <div class="tweet-image">
+                <img class="thumbnail-image" data-bind="attr: { src: image }">
+            </div>
+            <div class="tweet-content">
+                <div class="tweet-row">
+                    <span class="tweet-user-name">
+                        <span class="tweet-screen-name" data-bind="text: user"></span>
+                        <span class="tweet-full-name" data-bind="text: name"></span>
+                    </span>
+                </div>
+                <div class="tweet-row tweet-text" data-bind="text: text"></div>
+                <div class="tweet-row">
+                    <span class="tweet-timestamp" data-bind="text:time"></span>
+                </div>
+            </div>
+        </div>
+    </script>
+</head>
+<body>
+    <div class="outer-wrap">
+        <div class="outer-container">
+            <div class="totals">Tweets Tracked: <span data-bind="text: total"></span></div>
+            <div class="tweet-container" data-bind="template: { name: 'tweet', foreach: tweets }"></div>
+        </div>
+    </div>
+</body>
+</html>

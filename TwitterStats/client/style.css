@@ -121,3 +121,50 @@ tr {
     float:right;
     margin-right: 15px;
 }
+
+.profperf-outer-container {
+    background-color: #f0f8ff;
+}
+
+.profperc-container {
+    font-family: Verdana, Tahoma, Arial;
+    min-width: 225px;
+    margin-top:20px;
+}
+
+.prof-line {
+    vertical-align: middle;
+}
+
+.prof-label {
+    float:left;
+    font-size:24pt;
+    line-height: 45pt;
+    color:silver;
+}
+
+.prof-value {
+    float:right;
+    font-size: 35pt;
+    color: #696969;
+    text-align: right;
+}
+
+.prof-percent {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.prof-percent-label {
+    color:#191970;
+    font-size: 24pt;
+}
+
+.prof-percent-value {
+    margin-top: 20px;
+    font-size: 50pt;
+}
+
+.clearFloat {
+    clear:both;
+}
