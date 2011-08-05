@@ -2,7 +2,8 @@ var twitter = require('ntwitter'),
     keys = require('./MyApiKeys.js'),
     express = require('express'),
     app = express.createServer(),
-    io = require('socket.io').listen(app);
+    io = require('socket.io').listen(app),
+    v8 = require('v8-profiler');
 
 var TwitterStreamer = function(port, trackOptions) {
     var _twit = new twitter({
@@ -12,7 +13,6 @@ var TwitterStreamer = function(port, trackOptions) {
             access_token_secret: keys.access_token_secret
         }),
         _tweets = [],
-        _registry = {},
         _sockets = [],
         _wireUpSocket = function(socket) {
             _sockets.push(socket);
@@ -32,8 +32,7 @@ var TwitterStreamer = function(port, trackOptions) {
     _twit.stream('statuses/filter', params, function(stream) {
         stream.on('data', function (data) {
             if(data && data.user) {
-                if(!_registry[data.id_str]) {
-                    _registry[data.id_str] = true;
+                if(_tweets.filter(function(x) { return x.id === data.id_str; }).length === 0) {
                     var tweetData = {
                                         id: data.id_str,
                                         text: data.text,
