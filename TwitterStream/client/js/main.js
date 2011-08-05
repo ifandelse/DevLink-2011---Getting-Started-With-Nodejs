@@ -1,7 +1,6 @@
 var socket;
 
 var streamClient = {
-    registry: [],
     tweets: ko.observableArray([]),
     total: ko.observable(0),
     init: function(data) {
@@ -17,8 +16,7 @@ $(function() {
     socket = io.connect("http://" +document.domain + ':8088/');
     socket.on('connect', function () {
         socket.on('newTweet', function (tweet) {
-            if(streamClient.registry.filter(function(x) { return x.id === tweet.id; }).length === 0) {
-                streamClient.registry.unshift(tweet.id);
+            if(streamClient.tweets().filter(function(x) { return x.id === tweet.id; }).length === 0) {
                 streamClient.tweets.unshift(tweet);
                 streamClient.total(streamClient.total() + 1);
                 if(!streamClient.tweetThresholdMet) {
@@ -26,7 +24,6 @@ $(function() {
                 }
                 else {
                     streamClient.tweets.splice(streamClient.tweetThreshold, streamClient.tweets().length - streamClient.tweetThreshold);
-                    streamClient.registry.splice(streamClient.tweetThreshold, streamClient.registry.length - streamClient.tweetThreshold);
                 }
             }
         });

@@ -16,7 +16,7 @@ var TwitterStreamer = function(port, trackOptions) {
         _sockets = [],
         _wireUpSocket = function(socket) {
             _sockets.push(socket);
-            console.log("Socket ID " + socket.id + "connecting...");
+            console.log("Socket ID " + socket.id + " connecting...");
             console.log("Socket count now: " + _sockets.length);
             socket.emit("init", { tweets: _tweets });
             socket.on('end', function (socket) {
@@ -57,6 +57,7 @@ var TwitterStreamer = function(port, trackOptions) {
     });
 };
 
-var params = { track: ["#webdev", "nodejs", "#nodejs", "javascript", "#javascript", "#ruby", "#python", "#csharp", "#mvc", "#coffeescript", "#jquery", "#css"] };
-//var params = { track: ["#undateable"] }; // very busy hash tag for testing.  WARNING.  will depress your soul about the future of humanity.
+//var params = { track: ["#webdev", "nodejs", "#nodejs", "javascript", "#javascript", "#ruby", "#python", "#csharp", "#mvc", "#coffeescript", "#jquery", "#css"] };
+var params = { track: ["#undateable", "#fb"] }; // very busy hash tag for testing.  WARNING.  will depress your soul about the future of humanity.
+// var params = { track: [ "#devlink", "devlink", "#devlink2011", "devlink2011" ] };
 var streamer = new TwitterStreamer(8088, params);
