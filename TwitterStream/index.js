@@ -1,26 +1,28 @@
-var twitter = require('ntwitter'),
-    keys = require('./MyApiKeys.js'),
-    express = require('express'),
+var express = require('express'),
     app = express.createServer(),
     io = require('socket.io').listen(app),
-    v8 = require('v8-profiler');
+    TwitterStreamer = require('./TwitterStreamer.js').TwitterStreamer,
+    profiler = require('v8-profiler');
 
-var TwitterStreamer = function(port, trackOptions) {
-    var _twit = new twitter({
-            consumer_key: keys.consumer_key,
-            consumer_secret: keys.consumer_secret,
-            access_token_key: keys.access_token_key,
-            access_token_secret: keys.access_token_secret
-        }),
-        _tweets = [],
-        _sockets = [],
+var params = { track: [ "#devlink", "devlink", "#devlink2011", "devlink2011", "#fb", "#undateable" ] };
+var streamer = new TwitterStreamer(params, 400);
+
+var Server = function(port, streamer) {
+    var _sockets = [],
+        _snapShots = 0,
         _wireUpSocket = function(socket) {
             _sockets.push(socket);
             console.log("Socket ID " + socket.id + " connecting...");
             console.log("Socket count now: " + _sockets.length);
-            socket.emit("init", { tweets: _tweets });
+            socket.emit("init", { tweets: streamer.tweets });
             socket.on('end', function (socket) {
-                _sockets = _sockets.filter(function(s) { return s !== socket; });
+                _sockets.splice(_sockets.indexOf(socket,1));
+            });
+            profiler.takeSnapshot("SnapShot " + ++_snapShots);
+        },
+        _updateClients = function(payload) {
+            _sockets.forEach(function(socket) {
+                socket.emit("newTweet", payload);
             });
         };
 
@@ -28,35 +30,11 @@ var TwitterStreamer = function(port, trackOptions) {
     app.use("/", express.static(__dirname + '/client'));
     app.listen(port);
     io.sockets.on('connection', _wireUpSocket);
-    
-    _twit.stream('statuses/filter', params, function(stream) {
-        stream.on('data', function (data) {
-            if(data && data.user) {
-                if(_tweets.filter(function(x) { return x.id === data.id_str; }).length === 0) {
-                    var tweetData = {
-                                        id: data.id_str,
-                                        text: data.text,
-                                        image: data.user.profile_image_url,
-                                        user: data.user.screen_name,
-                                        name: data.user.name,
-                                        time: data.created_at
-                                    };
-
-                    console.log("Received Tweet From: " + tweetData.name);
-                    _tweets.unshift(tweetData);
-                    if(_tweets.length > 400) {
-                        _tweets.splice(400, _tweets.length - 400);
-                    }
-                    _sockets.forEach(function(socket) {
-                        socket.emit("newTweet", tweetData);
-                    });
-                }
-            }
-        });
-    });
+    streamer.on("newTweet", _updateClients);
+    streamer.start();
 };
 
-//var params = { track: ["#webdev", "nodejs", "#nodejs", "javascript", "#javascript", "#ruby", "#python", "#csharp", "#mvc", "#coffeescript", "#jquery", "#css"] };
-var params = { track: ["#undateable", "#fb"] }; // very busy hash tag for testing.  WARNING.  will depress your soul about the future of humanity.
-// var params = { track: [ "#devlink", "devlink", "#devlink2011", "devlink2011" ] };
-var streamer = new TwitterStreamer(8088, params);
+// Be sure to include profiler = require('v8-profiler');
+profiler.startProfiling('startup');
+var server = new Server(8088, streamer);
+profiler.stopProfiling('startup');
