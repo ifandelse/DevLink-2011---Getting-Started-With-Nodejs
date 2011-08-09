@@ -4,7 +4,8 @@ var express = require('express'),
     TwitterStreamer = require('./TwitterStreamer.js').TwitterStreamer,
     profiler = require('v8-profiler');
 
-var params = { track: [ "#devlink", "devlink", "#devlink2011", "devlink2011", "#fb", "#undateable" ] };
+//var params = { track: [ "#devlink", "devlink", "#devlink2011", "devlink2011", "#webdev", "#nodejs", "#javascript", "#fsharp" ] };
+var params = { track: [ "#undateable", "#fb" ] };
 var streamer = new TwitterStreamer(params, 400);
 
 var Server = function(port, streamer) {
@@ -33,7 +34,6 @@ var Server = function(port, streamer) {
     streamer.on("newTweet", _updateClients);
     streamer.start();
 };
-
 // Be sure to include profiler = require('v8-profiler');
 profiler.startProfiling('startup');
 var server = new Server(8088, streamer);

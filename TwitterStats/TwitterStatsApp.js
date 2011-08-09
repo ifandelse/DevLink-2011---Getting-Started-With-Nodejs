@@ -1,7 +1,7 @@
-var express = require('express'),
-    TwitterSearch = require ('./TwitterSearch.js').TwitterSearch,
-    app = express.createServer(),
-    io = require('socket.io').listen(app);
+    var express = require('express'),
+        TwitterSearch = require ('./TwitterSearch.js').TwitterSearch,
+        app = express.createServer(),
+        io = require('socket.io').listen(app);
 
 io.set('log level', 1);
 
