@@ -7,17 +7,10 @@ var webSrv = http.createServer(function(request, response){
     response.writeHead(200, {"Content-Type": "text/html"});
     response.write("<h3>You requested " + request.url + "</h3>");
     response.end();
-});
-
-webSrv.on('request', function(request, response){
-    var idx = 0,
-        length = sockets.length;
-    for(; idx < length; idx++) {
-        sockets[idx].write(request.method + "\t" + request.url + "\r\n");
-    }
-});
-
-webSrv.listen(8080);
+    sockets.forEach(function(socket) {
+        socket.write(request.method + "\t" + request.url + "\r\n");
+    });
+}).listen(8080);
 
 var server = net.Server(function (socket) {
     sockets.push(socket);

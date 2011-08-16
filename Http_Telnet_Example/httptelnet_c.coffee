@@ -1,16 +1,11 @@
 sockets = []
 
-notify = (socket, request) ->
-    socket.write request.method + "\t" + request.url + "\r\n"
-
 webSrv = require('http').createServer (request, response) ->
     response.writeHead 200, {'Content-Type': 'text/html'}
     response.write "<h3>You requested " + request.url + "</h3>"
     response.end()
-
-webSrv.on 'request', (request, response) ->
-        notify(client, request) for client in sockets
-
+    sockets.forEach (socket) ->
+        socket.write request.method + "\t" + request.url + "\r\n"
 webSrv.listen 8080
 
 netSrv = require('net').Server (socket) ->
@@ -20,4 +15,3 @@ netSrv = require('net').Server (socket) ->
         i = sockets.indexOf socket
         sockets.splice(i, 1)
 netSrv.listen 8000
-
