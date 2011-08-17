@@ -1,5 +1,6 @@
 var http = require('http');
 var net = require('net');
+var profiler = require('v8-profiler');
 
 var sockets = [];
 
@@ -7,10 +8,24 @@ var webSrv = http.createServer(function(request, response){
     response.writeHead(200, {"Content-Type": "text/html"});
     response.write("<h3>You requested " + request.url + "</h3>");
     response.end();
+<<<<<<< HEAD
+});
+
+webSrv.on('request', function(request, response){
+    var idx = 0,
+        length = sockets.length;
+    for(; idx < length; idx++) {
+        sockets[idx].write(request.method + "\t" + request.url + "\r\n");
+    }
+});
+
+webSrv.listen(8001);
+=======
     sockets.forEach(function(socket) {
         socket.write(request.method + "\t" + request.url + "\r\n");
     });
-}).listen(8001);
+}).listen(8080);
+>>>>>>> 746e7d287a1294149e64d60e5a00cbd014d12854
 
 var server = net.Server(function (socket) {
     sockets.push(socket);
