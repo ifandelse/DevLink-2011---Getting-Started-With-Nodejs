@@ -105,7 +105,7 @@ var socket,
     };
 
 $(function() {
-    socket = io.connect("http://" +document.domain + ':8001/');
+    socket = io.connect("http://" +document.domain + ':8002/');
     socket.on('connect', function () {
         socket.on('stats', function (stats) {
             if(stats.searchTerm === statsClient.searchTerm) {

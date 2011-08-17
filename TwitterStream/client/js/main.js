@@ -13,7 +13,7 @@ var streamClient = {
 };
 
 $(function() {
-    socket = io.connect("http://" +document.domain + ':8088/');
+    socket = io.connect("http://" +document.domain + ':8001/');
     socket.on('connect', function () {
         socket.on('newTweet', function (tweet) {
             if(streamClient.tweets().filter(function(x) { return x.id === tweet.id; }).length === 0) {

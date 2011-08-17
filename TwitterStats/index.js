@@ -13,4 +13,4 @@ var statCollectors = [new TweetCount(notifier),
                       new HashTagCount(notifier),
                       new ProfanityPercentage(notifier)];
 
-var twitterApp = new TwitterStatsApp(8001, 3000, notifier, "nodejs", statCollectors);
+var twitterApp = new TwitterStatsApp(8002, 3000, notifier, "devlink", statCollectors);

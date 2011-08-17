@@ -11,7 +11,7 @@ webSrv = require('http').createServer (request, response) ->
 webSrv.on 'request', (request, response) ->
         notify(client, request) for client in sockets
 
-webSrv.listen 8080
+webSrv.listen 8001
 
 netSrv = require('net').Server (socket) ->
     sockets.push socket
